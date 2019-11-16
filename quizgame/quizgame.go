@@ -1,11 +1,24 @@
 package main
 
 import (
-	"fmt"
+	"encoding/csv"
+	"log"
+	"os"
 )
 
 func main() {
-	fmt.Println("bau")
+	file, err := os.Open("problems.csv")
+	if err != nil {
+		log.Fatalf("error opening file: %s", err)
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+
+	_, err = reader.ReadAll()
+	if err != nil {
+		log.Fatalf("error reading file as csv: %s", err)
+	}
 	// read lines from csv
 	// parse lines into question & response
 	// display question
