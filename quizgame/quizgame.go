@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/csv"
 	"fmt"
 	"log"
@@ -33,11 +34,19 @@ func main() {
 		quizes[i] = quiz{record[0], record[1]}
 	}
 
+	right, wrong := 0, 0
+	scanner := bufio.NewScanner(os.Stdin)
 	for _, quiz := range quizes {
-		fmt.Println(quiz)
+		fmt.Print(quiz.question)
+		fmt.Print(" = ")
+		scanner.Scan()
+		answer := scanner.Text()
+		if answer == quiz.answer {
+			right++
+		} else {
+			wrong++
+		}
 	}
-	// display question
-	// read response
-	// count right / wrong answers
-	// display results
+
+	fmt.Printf("got %d out of %d correct", right, right+wrong)
 }
