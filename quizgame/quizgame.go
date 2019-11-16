@@ -19,6 +19,9 @@ var right = 0
 var quizes []quiz
 
 func main() {
+	durationPtr := flag.Duration("t", 30*time.Second, "How long to wait for the answers")
+
+	flag.Parse()
 	// read file
 	file, err := os.Open(filename())
 	if err != nil {
@@ -40,14 +43,14 @@ func main() {
 	}
 
 	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Print("You have 30 seconds, press enter when you're ready to begin...")
+	fmt.Printf("You have %v, press enter when you're ready to begin...", *durationPtr)
 	scanner.Scan()
 	ch1 := make(chan struct{})
 	ch2 := make(chan struct{})
 
 	// start two goroutines and wait for the first of them to finish
 	go takeQuiz(scanner, ch1)
-	go startTimer(ch2)
+	go startTimer(*durationPtr, ch2)
 	select {
 	case <-ch1:
 	case <-ch2:
@@ -58,8 +61,8 @@ func main() {
 	fmt.Printf("You got %d out of %d correct.", right, len(quizes))
 }
 
-func startTimer(signal chan struct{}) {
-	time.Sleep(10 * time.Second)
+func startTimer(timeout time.Duration, signal chan struct{}) {
+	time.Sleep(timeout)
 	close(signal)
 }
 
@@ -78,7 +81,6 @@ func takeQuiz(scanner *bufio.Scanner, signal chan struct{}) {
 }
 
 func filename() string {
-	flag.Parse()
 	args := flag.Args()
 	if len(args) == 0 {
 		return "problems.csv"
