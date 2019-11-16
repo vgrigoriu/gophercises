@@ -35,7 +35,7 @@ func main() {
 		quizes[i] = quiz{record[0], record[1]}
 	}
 
-	right, wrong := 0, 0
+	right := 0
 	scanner := bufio.NewScanner(os.Stdin)
 	for _, quiz := range quizes {
 		fmt.Print(quiz.question)
@@ -44,12 +44,10 @@ func main() {
 		answer := scanner.Text()
 		if answer == quiz.answer {
 			right++
-		} else {
-			wrong++
 		}
 	}
 
-	fmt.Printf("got %d out of %d correct", right, right+wrong)
+	fmt.Printf("got %d out of %d correct", right, len(quizes))
 }
 
 func filename() string {
