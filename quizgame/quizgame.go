@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"encoding/csv"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -15,7 +16,7 @@ type quiz struct {
 
 func main() {
 	// read file
-	file, err := os.Open("problems.csv")
+	file, err := os.Open(filename())
 	if err != nil {
 		log.Fatalf("error opening file: %s", err)
 	}
@@ -49,4 +50,14 @@ func main() {
 	}
 
 	fmt.Printf("got %d out of %d correct", right, right+wrong)
+}
+
+func filename() string {
+	flag.Parse()
+	args := flag.Args()
+	if len(args) == 0 {
+		return "problems.csv"
+	}
+
+	return args[0]
 }
