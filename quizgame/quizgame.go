@@ -2,11 +2,18 @@ package main
 
 import (
 	"encoding/csv"
+	"fmt"
 	"log"
 	"os"
 )
 
+type quiz struct {
+	question string
+	answer   string
+}
+
 func main() {
+	// read file
 	file, err := os.Open("problems.csv")
 	if err != nil {
 		log.Fatalf("error opening file: %s", err)
@@ -15,12 +22,20 @@ func main() {
 
 	reader := csv.NewReader(file)
 
-	_, err = reader.ReadAll()
+	records, err := reader.ReadAll()
 	if err != nil {
 		log.Fatalf("error reading file as csv: %s", err)
 	}
-	// read lines from csv
-	// parse lines into question & response
+
+	// parse into question & response
+	quizes := make([]quiz, len(records))
+	for i, record := range records {
+		quizes[i] = quiz{record[0], record[1]}
+	}
+
+	for _, quiz := range quizes {
+		fmt.Println(quiz)
+	}
 	// display question
 	// read response
 	// count right / wrong answers
